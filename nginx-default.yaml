@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx-config
+  name: nginx-config-map
 data:
   default.conf: | 
     server {
@@ -44,12 +44,15 @@ spec:
       labels:
         app: nginx
     spec:
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config-map
       containers:
       - name: nginx
         image: nginx:alpine
         ports:
         - containerPort: 80
-      volumes:
-      - name: nginx-config
-        configMap:
-          name: nginx-config
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
